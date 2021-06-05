@@ -1,25 +1,51 @@
-import logo from './logo.svg';
-import './App.css';
+// TodoList simple app
+// App.js
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import React from "react";
+import "./App.css";
+import TodoItem from "./components/TodoItem";
+import Title from "./components/Title";
+import todosData from "./todosData";
+
+class App extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      todos: todosData,
+    };
+  }
+
+  handleChange = (id) => {
+    this.setState((prevState) => {
+      const updatedTodos = prevState.todos.map((todo) => {
+        if (todo.id === id) {
+          return {
+            ...todo,
+            completed: !todo.completed,
+          };
+        }
+        return todo;
+      });
+      return {
+        todos: updatedTodos,
+      };
+    });
+  };
+  render() {
+    const todosComponents = this.state.todos.map((todoItem) => (
+      <TodoItem
+        key={todoItem.id}
+        item={todoItem}
+        handleChange={this.handleChange}
+      />
+    ));
+    return (
+      <div className="content-container">
+        <Title />
+        <div className="todo-list">{todosComponents}</div>
+      </div>
+    );
+  }
 }
 
 export default App;
